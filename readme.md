@@ -76,6 +76,44 @@ test_database=# select attname, avg_width from pg_stats where tablename = 'order
 провести разбиение таблицы на 2 (шардировать на orders_1 - price>499 и orders_2 - price<=499).
 
 Предложите SQL-транзакцию для проведения данной операции.
+```sql
+begin;
+
+CREATE TABLE new_orders (like orders including defaults including constraints including indexes);
+CREATE TABLE orders_1 (CHECK (price > 499)) INHERITS (new_orders);
+CREATE TABLE orders_2 (CHECK (price <= 499)) INHERITS (new_orders);
+
+
+CREATE OR REPLACE FUNCTION orders_insert_trigger()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF ( NEW.price > 499 ) THEN
+        INSERT INTO orders_1 VALUES (NEW.*);
+    ELSIF ( NEW.price <= 499) THEN
+        INSERT INTO orders_2 VALUES (NEW.*);
+    ELSE
+        RAISE EXCEPTION 'Date out of range.';
+    END IF;
+    RETURN NULL;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER insert_orders_trigger
+    BEFORE INSERT ON new_orders
+    FOR EACH ROW EXECUTE PROCEDURE orders_insert_trigger();
+
+
+insert into new_orders (id,title,price) select * from orders;
+
+ALTER SEQUENCE orders_id_seq OWNED BY new_orders.id;
+drop table orders;
+
+alter table new_orders rename to orders;
+
+commit;
+```
+
 
 Можно ли было изначально исключить "ручное" разбиение при проектировании таблицы orders?
 
