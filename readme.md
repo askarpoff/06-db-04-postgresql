@@ -76,6 +76,7 @@ test_database=# select attname, avg_width from pg_stats where tablename = 'order
 провести разбиение таблицы на 2 (шардировать на orders_1 - price>499 и orders_2 - price<=499).
 
 Предложите SQL-транзакцию для проведения данной операции.
+### Транзакция
 ```sql
 begin;
 
@@ -113,11 +114,26 @@ alter table new_orders rename to orders;
 
 commit;
 ```
-
-
 Можно ли было изначально исключить "ручное" разбиение при проектировании таблицы orders?
 
 ### Ответ:
+Я думаю, что "декларативным разбиением"(Declarative Partitioning):
+```sql
+CREATE TABLE orders (
+    id integer NOT NULL,
+    title character varying(80) NOT NULL,
+    price integer DEFAULT 0
+);
+CREATE TABLE orders_1 (
+    check (price>499)
+) inherits (public.orders);
+
+CREATE TABLE orders_2 (
+    check (price<=499)
+) inherits (public.orders);
+CREATE RULE orders_1_insert as on INSERT TO orders WHERE (price>499) DO INSTEAD INSERT INTO orders_1 values(NEW.*);
+CREATE RULE orders_2_insert as on INSERT TO orders WHERE (price<=499) DO INSTEAD INSERT INTO orders_2 values(NEW.*);
+```
 
 ## Задача 4
 
