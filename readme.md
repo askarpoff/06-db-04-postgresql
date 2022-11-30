@@ -76,7 +76,7 @@ test_database=# select attname, avg_width from pg_stats where tablename = 'order
 провести разбиение таблицы на 2 (шардировать на orders_1 - price>499 и orders_2 - price<=499).
 
 Предложите SQL-транзакцию для проведения данной операции.
-### Транзакция
+### Транзакция:
 ```sql
 begin;
 
