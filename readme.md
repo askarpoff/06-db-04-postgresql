@@ -1,4 +1,4 @@
-# Домашнее задание к занятию "6.4. PostgreSQL"
+# Домашнее задание к занятию "6.4. PostgreSQL" - Карпов Андрей, devops-21
 
 ## Задача 1
 
@@ -56,7 +56,19 @@
 **Приведите в ответе** команду, которую вы использовали для вычисления и полученный результат.
 
 ### Ответ:
+```
+postgres@53e13bf22bee:~$ psql test_database
+psql (13.9 (Debian 13.9-1.pgdg110+1))
+Type "help" for help.
 
+test_database=# ANALYZE;
+ANALYZE
+test_database=# select attname, avg_width from pg_stats where tablename = 'orders' order by avg_width desc limit 1;
+ attname | avg_width
+---------+-----------
+ title   |        16
+(1 row)
+```
 ## Задача 3
 
 Архитектор и администратор БД выяснили, что ваша таблица orders разрослась до невиданных размеров и
@@ -76,3 +88,6 @@
 Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца `title` для таблиц `test_database`?
 
 ### Ответ:
+```bash
+postgres@53e13bf22bee:~$ pg_dump test_database > backup.sql
+```
