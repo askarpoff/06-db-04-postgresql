@@ -145,11 +145,11 @@ CREATE RULE orders_2_insert as on INSERT TO orders WHERE (price<=499) DO INSTEAD
 ```bash
 postgres@53e13bf22bee:~$ pg_dump test_database > backup.sql
 ```
-Дописать в SQL огрничение при создании таблицы - UNIQUE
+Дописать в SQL огрничение при создании таблицы - **UNIQUE**
 ```
  CREATE TABLE orders (
     id integer NOT NULL,
-    title character varying(80) NOT NULL <b>UNIQUE</b>,
+    title character varying(80) NOT NULL UNIQUE,
     price integer DEFAULT 0
 );
 ```
