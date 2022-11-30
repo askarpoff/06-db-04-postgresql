@@ -16,24 +16,24 @@
 - выхода из psql
 
 ### Ответ:
-- вывода списка БД
+- вывод списка БД
 ```
 \l[+]   [PATTERN]      list databases
 ```
-- подключения к БД
+- подключение к БД
 ```
 \c[onnect] {[DBNAME|- USER|- HOST|- PORT|-] | conninfo}
                          connect to new database (currently "postgres")
 ```
-- вывода списка таблиц
+- вывод списка таблиц
 ```
 \d[S+]                 list tables, views, and sequences
 ```
-- вывода описания содержимого таблиц
+- вывод описания содержимого таблиц
 ```
 \d[S+]  NAME           describe table, view, sequence, or index
 ```
-- выхода из psql
+- выход из psql
 ```
 \q                     quit psql
 ```
@@ -145,7 +145,7 @@ CREATE RULE orders_2_insert as on INSERT TO orders WHERE (price<=499) DO INSTEAD
 ```bash
 postgres@53e13bf22bee:~$ pg_dump test_database > backup.sql
 ```
-Дописать в SQL огрничение при создании таблицы - **UNIQUE**
+Дописать в SQL ограничение при создании таблицы - **UNIQUE**
 ```
  CREATE TABLE orders (
     id integer NOT NULL,
